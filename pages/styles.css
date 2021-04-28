@@ -1,0 +1,267 @@
+body {
+  font-family: "Archivo", sans-serif;
+}
+
+.container {
+  margin-left: 92px;
+  margin-right: 69px;
+  max-width: 1440px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin: 57px 0 42px 0;
+}
+
+.basket_counter {
+  background-color: black;
+  color: white;
+  padding: 5px;
+}
+
+.basket_list {
+  position: absolute;
+  width: 443px;
+  height: 270px;
+  z-index: 1;
+  border: solid;
+  top: 156px;
+  right: 74px;
+  background-color: white;
+}
+
+.basket_list_product {
+  display: flex;
+  margin: 0 24px 24px 27px;
+}
+
+.basket_list img {
+  max-height: 149px;
+  max-width: 86px;
+}
+
+.basket_list button {
+  background: #ffffff;
+  border: 3px solid #000000;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 23px;
+  line-height: 25px;
+  width: 390px;
+  margin: 15px 24px 22px 27px;
+  height: 55px;
+}
+
+.banner_header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.title {
+  margin-top: 62px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 32px;
+  line-height: 35px;
+}
+
+.add_card_button {
+  background: #000000;
+  color: #ffffff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 25px;
+  letter-spacing: 0.07em;
+  padding: 13px 39px 13px 39px;
+}
+
+.banner_wrapper {
+  position: relative;
+  max-height: 550px;
+  overflow: hidden;
+}
+
+.banner_image {
+  /* width: 1438px;
+  height: 553px; */
+  width: 100%;
+}
+
+.small {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  z-index: 1;
+  width: 271.95px;
+  height: 67px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  line-height: 22px;
+}
+
+.banner_details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 46px;
+}
+
+.left {
+  width: 690px;
+  height: 299px;
+}
+
+.left_title {
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 24px;
+}
+
+.left_details {
+  font-size: 18px;
+  line-height: 150%;
+  color: #656565;
+}
+
+.right {
+  text-align: right;
+  margin-bottom: 65px;
+}
+
+.right_title {
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.small_images img {
+  max-width: 117px;
+  max-height: 147px;
+  margin-left: 20px;
+}
+
+.right_details_title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.right_details p {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 17px;
+  color: #656565;
+}
+
+.products_title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.section {
+  display: flex;
+}
+
+.filters_wrapper {
+  width: 20%;
+}
+
+.filters_wrapper p {
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 24px;
+  margin-bottom: 43px;
+}
+
+.filters_wrapper ul {
+  margin-left: -40px;
+  list-style-type: none;
+}
+
+.filters_wrapper li {
+  margin-bottom: 40px;
+  font-size: 22px;
+}
+
+.filters_wrapper input {
+  margin-right: 23px;
+}
+
+.product_images {
+  width: 80%;
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: left;
+}
+
+.product_images img {
+  width: 100%;
+  margin: 20px;
+}
+
+.card {
+  /* height: 100%; */
+  position: relative;
+}
+
+.card img:hover + .hover_add {
+  visibility: visible;
+}
+
+.hover_add {
+  visibility: hidden;
+  position: absolute;
+  background: #000000;
+  color: #ffffff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 25px;
+  letter-spacing: 0.07em;
+  padding: 13px 39px 13px 39px;
+  bottom: 142px;
+  left: 19px;
+  width: 79%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bestseller {
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product_info {
+  margin: -30px 0 0 20px;
+}
+
+.product_info_cat_name {
+  font-size: 22px;
+  color: #656565;
+}
+
+.product_info_prod_name {
+  font-size: 34px;
+  margin-top: -18px;
+}
+
+.product_info_price {
+  font-size: 29px;
+  margin-top: -32px;
+  color: #656565;
+}
