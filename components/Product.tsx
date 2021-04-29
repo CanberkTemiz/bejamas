@@ -14,12 +14,12 @@ interface TProduct {
 
 interface TProps {product: TProduct}
 
-const Product = ({product}: TProps) => {
+const Product = ({product, addCard}) => {
     return (
         <div className="card">  
-            <img src={product.image} />
+            <img src={product.image} onClick={() => addCard(product)}/>
             {product.bestseller && (
-                <p className="bestseller">Best Seller</p>
+                <span className="bestseller">Best Seller</span>
             )}
             <span className="hover_add">Add to card</span>
             {/* <p className={`${product.bestseller === true ? "bestseller" : null}`}>Best Seller</p> */}

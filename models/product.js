@@ -39,14 +39,4 @@ mongoose.models = {};
 
 var Product = mongoose.model("Product", product);
 
-const options = {
-  page: 1,
-  limit: 10,
-  collation: {
-    locale: "en",
-  },
-};
-
-Product.paginate(options).then((data) => console.log(data));
-
 export default Product;

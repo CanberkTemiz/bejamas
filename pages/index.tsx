@@ -1,5 +1,3 @@
-import Link from "next/link";
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import Product from '../components/Product';
 
@@ -15,48 +13,100 @@ interface TProduct {
   details: string | null
 }
 
-const defaultEndpoint = "http://localhost:3000/api/product";
+const baseURL = "http://localhost:3000";
+
+const getResponse = async (page = 1, category = [], sort = "", asc = 1) => {
+    
+  const params = { page, category, sort, asc };
+  
+  var url: any = new URL(`${baseURL}/api/product`);
+  
+  Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+  const res = await fetch(url);
+  
+  const data = await res.json();
+
+  return data;
+}
 
 export async function getServerSideProps() {
-  const res = await fetch(defaultEndpoint);
-
-  const data = await res.json();
   
+  const data = await getResponse();
+  
+  const categories = await (await fetch(`${baseURL}/api/category`)).json();
+  
+  const featured = await (await fetch(`${baseURL}/api/featured`)).json();
+
   return {
     props: {
-      data
+      data,
+      categories,
+      featured
     }
   }
 }
 
-export default function Home({data}) {
+export default function Home({data, categories, featured}) {
   
-  const [products, setProducts] = useState<TProduct[]>(data);
   const [basket, setBasket] = useState<TProduct[]>([]);
-  const [featured, setFeatured] = useState<TProduct>();
   
-  const categories = [...new Set(products.map(product => product.category))];
-  const prices = [...new Set(products.map(product => product.price))];
+  const [isBasketVisible, setIsBasketVisible] = useState(false);
+  const [response, setResponse] = useState<any>(data);
 
-  const handleBasketClick = () => {
-    console.log('baskete basuildi')
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedSort, setSelectedSort] = useState("");
+  const [selectedAsc, setSelectedAsc] = useState(1);
+
+  const prices = [...new Set(response.docs.map(product => product.price))];
+
+  const toggleBasket = () => {
+    setIsBasketVisible(!isBasketVisible);
   }
 
   const addToCard = (product) => {
     setBasket([...basket, product]);
-    console.log(product)
+    setIsBasketVisible(true);
+    console.log(product);
+  }
+
+  const handleClearBasket = () => {
+    setBasket([]);
+    setIsBasketVisible(false);
+  }
+
+  const handleGetData = async (index) => {
+    const data = await getResponse(index, selectedCategories, selectedSort, selectedAsc);
+    setResponse(data);
+  }
+
+  const handleCategoryFilter = (filter) => {
+    const index = selectedCategories.findIndex((value) => value === filter);
+    
+    if( index !== -1 ) {
+      selectedCategories.splice(index, 1);
+      return setSelectedCategories([...selectedCategories]);
+    }
+     
+    return setSelectedCategories([...selectedCategories, filter]);
+  }
+
+  const handlePriceFilter = (filter) => {
+    console.log(filter);
+  }
+
+  const handleSortSelect = (value) => {
+    setSelectedSort(value.target.value);
+  }
+
+  const handleSortAscSelect = (asc) => {
+    
+    setSelectedAsc(asc);
   }
 
   useEffect(() => {
-    setFeatured(products.find(product => product.featured === true));
-  }, [])
-
-  // useEffect(() => {
-  //   fetch(`/api/product`)
-  //     .then((response) => response.json())
-  //     // .then(data => console.log(data))
-  //     .then((data) => setProducts(data));
-  // }, []);
+    handleGetData(1);
+  }, [selectedCategories, selectedSort, selectedAsc])
 
   return (
     <div className="container">
@@ -64,25 +114,29 @@ export default function Home({data}) {
         <span>
           <img src="/logo.png" />
         </span>
-        <span onClick={handleBasketClick}>
+        <span onClick={toggleBasket}>
           <img src="basket.svg" />
           <span className="basket_counter">{basket.length}</span>
         </span>
       </div>
 
-      <div className="basket_list">
-        <img src="/cross.svg" />
-        <div className="basket_list_product">
-          <div>
-            <p style={{fontStyle: "normal", fontWeight: "bold", fontSize: "20px", lineHeight: "22px"}}>Samurai King Resting</p>
-            <p style={{fontStyle: "normal", fontWeight: "normal", fontSize: "29px", lineHeight: "32px"}}>$10000.00</p>
-          </div>
-          <img src="https://images.pexels.com/photos/7401966/pexels-photo-7401966.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=50"/>  
+      { isBasketVisible && (
+        <div className="basket_list">
+          <span onClick={toggleBasket} style={{fontSize: 40}}>&#10005;</span>
+            {basket.map(item => (
+              <div className="basket_list_product">  
+                <div>
+                  <p style={{fontStyle: "normal", fontWeight: "bold", fontSize: "20px", lineHeight: "22px"}}>{item.name}</p>
+                  <p style={{fontStyle: "normal", fontWeight: "normal", fontSize: "29px", lineHeight: "32px"}}>${item.price}</p>
+                </div>
+                <img src={item.image}/>
+              </div>
+            ))}
+          <hr />
+          <button onClick={handleClearBasket}>CLEAR</button>
         </div>
-        
-        <hr />
-        <button>CLEAR</button>
-      </div>
+      )}
+      
 
       <hr />
 
@@ -159,8 +213,15 @@ export default function Home({data}) {
           </div>
 
           <div style={{ display: "flex", fontSize: 22, lineHeight: "24px" }}>
-            <p>Sort by: </p>
-            <p style={{ color: "#9B9B9B" }}>Price</p>
+            <img onClick={() => handleSortAscSelect(1)} src="/sortdown.svg" />
+            <img onClick={() => handleSortAscSelect(-1)} src="/sortup.svg" />
+            <p style={{ color: "#9B9B9B" }}>Sort by</p>
+            <select onChange={handleSortSelect}>
+              <option value="">Select Option</option>
+              <option value="price">Price</option>
+              <option value="name">Name</option>
+            </select>
+            <img src="/sortselect.svg" />
           </div>
         </div>
 
@@ -171,7 +232,7 @@ export default function Home({data}) {
               <ul>
                 {categories.map((category,index) => (
                   <li key={index}>
-                    <input type="checkbox" />
+                    <input onClick={() => handleCategoryFilter(category)} value={category} type="checkbox" />
                     {category}
                   </li>
                 ))}
@@ -183,7 +244,7 @@ export default function Home({data}) {
               <ul>
                 {prices.map((price, index) => (
                   <li key={index}>
-                    <input type="checkbox" />
+                    <input onClick={() => handlePriceFilter(price)} type="checkbox" />
                     {price}
                   </li>
                 ))}
@@ -192,12 +253,31 @@ export default function Home({data}) {
           </div>
 
           <div className="product_images">
-            {products.map(product => (
-              <Product product={product} key={product._id} />
-            ))}
+            {/* {products.map(product => (
+              !product.featured && 
+              (<Product product={product} addCard={addToCard} key={product._id} />)
+            ))} */}
+              {response.docs.map(product => (
+          
+              <Product product={product} addCard={addToCard} key={product._id} />)
+            )}
           </div>
+
+
         </div>
       </div>
+      
+      
+      <div>
+        <h1>{response.totalPages}</h1>
+        {new Array(response.totalPages).fill("").map((page, index) => (
+          <button 
+            key={index} 
+            className={index+1 === response?.page ? "isActivePage" : ""} 
+            onClick={() => handleGetData(index+1)}>{index + 1 }</button>
+        ))}
+      </div>
+    
     </div>
   );
 }

@@ -3,7 +3,24 @@ import Product from "../../models/product";
 
 const handler = async (req, res) => {
   try {
-    const result = await Product.find().exec();
+    const options = {
+      page: Number(req.query.page || 1),
+      limit: 6,
+    };
+
+    console.log("product", req.query);
+
+    const mongoQuery = { featured: false };
+
+    if (req.query.category) {
+      mongoQuery.category = { $in: req.query.category.split(",") };
+    }
+
+    if (req.query.sort) {
+      options.sort = { [req.query.sort]: req.query.asc || 1 };
+    }
+
+    const result = await Product.paginate(mongoQuery, options);
 
     console.log(result);
 
