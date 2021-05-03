@@ -17,12 +17,15 @@ interface TProps {product: TProduct}
 const Product = ({product, addCard}) => {
     return (
         <div className="card">  
-            <img src={product.image} onClick={() => addCard(product)}/>
-            {product.bestseller && (
-                <span className="bestseller">Best Seller</span>
-            )}
-            <span className="hover_add">Add to card</span>
+            <div className="card_image">
+                <img src={product.image} onClick={() => addCard(product)}/>
+                {product.bestseller && (
+                    <span className="bestseller">Best Seller</span>
+                    )}
+                <span className="hover_add">Add to card</span>
             {/* <p className={`${product.bestseller === true ? "bestseller" : null}`}>Best Seller</p> */}
+            </div>
+
             <div className="product_info">
                 <p className="product_info_cat_name">{product.category}</p>
                 <p className="product_info_prod_name">{product.name}</p>

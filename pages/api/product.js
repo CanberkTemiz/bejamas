@@ -8,21 +8,26 @@ const handler = async (req, res) => {
       limit: 6,
     };
 
-    console.log("product", req.query);
-
     const mongoQuery = { featured: false };
 
     if (req.query.category) {
       mongoQuery.category = { $in: req.query.category.split(",") };
     }
 
+    if (req.query.price) {
+      const price = req.query.price.split("-");
+
+      if (price.length === 1) {
+        mongoQuery.price = { $gt: Number(price[0]) };
+      } else {
+        mongoQuery.price = { $gte: Number(price[0]), $lte: Number(price[1]) };
+      }
+    }
+
     if (req.query.sort) {
       options.sort = { [req.query.sort]: req.query.asc || 1 };
     }
-
     const result = await Product.paginate(mongoQuery, options);
-
-    console.log(result);
 
     return res.status(200).json(result);
   } catch (error) {
